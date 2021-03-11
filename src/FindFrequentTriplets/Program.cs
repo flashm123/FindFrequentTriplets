@@ -40,9 +40,15 @@ namespace FindFrequentTriplets
 			Console.ReadKey(true);
 		}
 		
-		public static int GetTripletFrequency(List<Triplet> allTriplets, string letters)
+		/// <summary>
+		/// Get count of how many times the selected triple is in triple list
+		/// </summary>
+		/// <param name="triplets">Triplets list</param>
+		/// <param name="letters">Three letters to search</param>
+		/// <returns></returns>
+		public static int GetTripletFrequency(List<Triplet> triplets, string letters)
 		{
-			return allTriplets.Count(triplet => triplet.Letters == letters);
+			return triplets.Count(triplet => triplet.Letters == letters);
 		}
 		
 		/// <summary>
@@ -72,14 +78,23 @@ namespace FindFrequentTriplets
 			}
 		}
 		
+		/// <summary>
+		/// This struct defines Triplet entity
+		/// </summary>
 		public struct Triplet
 		{
+			/// <summary>
+			/// Three letters
+			/// </summary>
 			public string Letters
 			{
 				get; 
 				set;
 			}
 			
+			/// <summary>
+			/// How many times the letters present in the whole text
+			/// </summary>
 			public int Frequency
 			{
 				get; 
