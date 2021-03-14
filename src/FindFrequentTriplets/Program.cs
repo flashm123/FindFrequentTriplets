@@ -1,30 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace FindFrequentTriplets
 {
 	class Program
 	{
+		
 		public static void Main(string[] args)
+		{
+			OneThread();
+			Console.ReadKey();
+		}
+		
+		public static void OneThread()
 		{
 			string input = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
 			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
 			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
 			
-			List<Triplet> triplets;
+			var triplets = MakeTripletCombinations(PrepareText(input));
 			
-			MakeTripletCombinations(PrepareText(input), out triplets);
 			
-			for (int i = 0; i < triplets.Count; i++)
-			{
-				var triplet = triplets[i];
-				triplet.Frequency = GetTripletFrequency(triplets, triplets[i].Letters.ToLower());
-				
-				// Remove old triplet and Insert new triplet with defined frequency
-				triplets.RemoveAt(i);
-				triplets.Insert(i, triplet);
-			}
+			var stopWatch = new Stopwatch();
+		    stopWatch.Start();
+			
+		    ProcessText(triplets);
+			
+			stopWatch.Stop();
+			Console.WriteLine(stopWatch.Elapsed);
 			
 			var groupedOrderedTriplets = triplets.GroupBy(triplet => triplet.Letters, 
 			                                       triplet => triplet, 
@@ -32,13 +38,14 @@ namespace FindFrequentTriplets
 										  .OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
 										  .ToList<Triplet>();
 			
+			
 			for (int i = 0; i < 10; i++)
 			{
 				Console.WriteLine(string.Format("{0} - {1}", groupedOrderedTriplets[i].Letters, groupedOrderedTriplets[i].Frequency));
 			}
 			
-			Console.ReadKey(true);
 		}
+		
 		
 		/// <summary>
 		/// Get count of how many times the selected triple is in triple list
@@ -65,10 +72,9 @@ namespace FindFrequentTriplets
 		/// Make triplet combinations from string of letters and keep them to triplets list
 		/// </summary>
 		/// <param name="source">Initial text with letters only</param>
-		/// <param name="triplets">Triplet list (contains list of triplet structure)</param>
-		public static void MakeTripletCombinations(string source, out List<Triplet> triplets)
+		public static List<Triplet> MakeTripletCombinations(string source)
 		{
-			triplets = new List<Triplet>();
+			var triplets = new List<Triplet>();
 			
 			for (int i = 0; i < source.Length - 2; i++)
 			{
@@ -76,6 +82,8 @@ namespace FindFrequentTriplets
 				                         + source[i+1].ToString() 
 				                         + source[i+2].ToString()));
 			}
+			
+			return triplets;
 		}
 		
 		/// <summary>
@@ -104,6 +112,20 @@ namespace FindFrequentTriplets
 			public Triplet(string letters) : this()
 			{
 				Letters = letters;
+			}
+		}
+		
+		
+		public static void ProcessText(List<Triplet> triplets)
+		{
+			for (int i = 0; i < triplets.Count; i++)
+			{
+				var triplet = triplets[i];
+				triplet.Frequency = GetTripletFrequency(triplets, triplets[i].Letters.ToLower());
+				
+				// Remove old triplet and Insert new triplet with defined frequency
+				triplets.RemoveAt(i);
+				triplets.Insert(i, triplet);
 			}
 		}
 	}
