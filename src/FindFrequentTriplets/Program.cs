@@ -12,6 +12,7 @@ namespace FindFrequentTriplets
 		public static void Main(string[] args)
 		{
 			OneThread();
+			ManyThreads();
 			Console.ReadKey();
 		}
 		
@@ -22,7 +23,6 @@ namespace FindFrequentTriplets
 			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
 			
 			var triplets = MakeTripletCombinations(PrepareText(input));
-			
 			
 			var stopWatch = new Stopwatch();
 		    stopWatch.Start();
@@ -45,6 +45,83 @@ namespace FindFrequentTriplets
 			}
 			
 		}
+		
+		
+		public static void ManyThreads()
+		{
+			string input = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
+			
+			var triplets = MakeTripletCombinations(PrepareText(input));
+			
+			// split the tripl list into the several parts (part = thread)
+			const int parts = 2;
+			var partSize = triplets.Count / parts;
+			var lastPartSize = triplets.Count - partSize * parts + partSize;
+			
+			var trPart1 = new List<Triplet>();
+			var trPart2 = new List<Triplet>();
+			
+			for (int i = 0; i < triplets.Count; i++)
+			{
+				if (i < partSize)
+				{
+					trPart1.Add(triplets[i]);
+				}
+				
+				if (i >= partSize)
+				{
+					trPart2.Add(triplets[i]);
+				}
+			}
+			
+			var stopWatch = new Stopwatch();
+		    stopWatch.Start();
+			
+		    var thr1 = new Thread(new ThreadStart(() => ProcessText(trPart1)));
+       	    thr1.Start();
+       	    
+       	    var thr2 = new Thread(new ThreadStart(() => ProcessText(trPart2)));
+       	    thr2.Start();
+       	    
+       	    
+       	    thr1.Join();
+       	    thr2.Join();
+			
+			stopWatch.Stop();
+			Console.WriteLine(stopWatch.Elapsed);
+			
+
+			trPart1 = trPart1.GroupBy(triplet => triplet.Letters,
+			                          triplet => triplet, 
+			                          (key, value) => new Triplet() {Letters = key, Frequency = value.First().Frequency} )
+									.ToList<Triplet>();
+			
+			trPart2 = trPart2.GroupBy(triplet => triplet.Letters, 
+			                                       triplet => triplet, 
+			                                       (key, value) => new Triplet() {Letters = key, Frequency = value.First().Frequency} )
+									.ToList<Triplet>();
+										  
+			
+			triplets = trPart1.Concat(trPart2).GroupBy(triplet => triplet.Letters, 
+			                                       triplet => triplet, 
+			                                       (key, value) => new Triplet() {Letters = key, Frequency = value.Sum(tr => tr.Frequency)} )
+										  .OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
+										  .ToList<Triplet>();
+			
+			
+			
+			var groupedOrderedTriplets = triplets.OrderByDescending(groupedTriplet => groupedTriplet.Frequency).ToList<Triplet>();
+			
+			
+			for (int i = 0; i < 10; i++)
+			{
+				Console.WriteLine(string.Format("{0} - {1}", groupedOrderedTriplets[i].Letters, groupedOrderedTriplets[i].Frequency));
+			}
+			
+		}
+		
 		
 		
 		/// <summary>
