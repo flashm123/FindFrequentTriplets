@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FindFrequentTriplets
-{
+{   
+    /// <summary>
+    /// This class measures the top 10 triplets in the text. 
+    /// The path to the text file is taken from the command line arguments.
+    /// </summary>
     class Program
     {
+        // The count of parts to split the text to
         private const int partCount = 8;
 
         public static void Main(string[] args)
