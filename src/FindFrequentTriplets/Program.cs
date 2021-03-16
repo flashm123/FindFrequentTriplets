@@ -8,7 +8,8 @@ namespace FindFrequentTriplets
 {
 	class Program
 	{
-		
+        private const int threadsCount = 3;
+
 		public static void Main(string[] args)
 		{
 			OneThread();
@@ -22,21 +23,33 @@ namespace FindFrequentTriplets
 			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
 			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
 			
-			var triplets = MakeTripletCombinations(PrepareText(input));
+			string input1 = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном. Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
+			
+			var triplets = MakeTripletCombinations(PrepareText(input1));
+			
 			
 			var stopWatch = new Stopwatch();
 		    stopWatch.Start();
 			
-		    ProcessText(triplets);
+		    var result = ProcessText(triplets);
 			
 			stopWatch.Stop();
 			Console.WriteLine(stopWatch.Elapsed);
-			
-			var groupedOrderedTriplets = triplets.GroupBy(triplet => triplet.Letters, 
-			                                       triplet => triplet, 
-			                                       (key, value) => new Triplet() {Letters = key, Frequency = value.First().Frequency} )
-										  .OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
-										  .ToList<Triplet>();
+
+            var groupedOrderedTriplets = result.OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
+										       .ToList<Triplet>();
 			
 			
 			for (int i = 0; i < 10; i++)
@@ -53,76 +66,48 @@ namespace FindFrequentTriplets
 			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
 			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
 			
-			var triplets = MakeTripletCombinations(PrepareText(input));
 			
-			// split the tripl list into the several parts (part = thread)
-			const int parts = 2;
-			var partSize = triplets.Count / parts;
-			var lastPartSize = triplets.Count - partSize * parts + partSize;
+			string input1 = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном. Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
+			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
+			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
 			
-			var trPart1 = new List<Triplet>();
-			var trPart2 = new List<Triplet>();
 			
-			for (int i = 0; i < triplets.Count; i++)
-			{
-				if (i < partSize)
-				{
-					trPart1.Add(triplets[i]);
-				}
-				
-				if (i >= partSize)
-				{
-					trPart2.Add(triplets[i]);
-				}
-			}
+			var triplets = MakeTripletCombinations(PrepareText(input1));
+			
 			
 			var stopWatch = new Stopwatch();
 		    stopWatch.Start();
-			
-		    var thr1 = new Thread(new ThreadStart(() => ProcessText(trPart1)));
-       	    thr1.Start();
-       	    
-       	    var thr2 = new Thread(new ThreadStart(() => ProcessText(trPart2)));
-       	    thr2.Start();
-       	    
-       	    
-       	    thr1.Join();
-       	    thr2.Join();
+
+            var tripleParts = SplitTripletsIntoParts(triplets);
+
+            var result = PerformMultiThreadingWork(tripleParts, threadsCount).GroupBy(tr => tr.Letters,
+                                                                        triplet => triplet,
+                                                                        (key, value) => new Triplet() { Letters = key, Frequency = value.Sum(gr => gr.Frequency) })
+                                                               .OrderByDescending(tr => tr.Frequency)
+                                                               .ToList<Triplet>();
+
 			
 			stopWatch.Stop();
+			
 			Console.WriteLine(stopWatch.Elapsed);
-			
-
-			trPart1 = trPart1.GroupBy(triplet => triplet.Letters,
-			                          triplet => triplet, 
-			                          (key, value) => new Triplet() {Letters = key, Frequency = value.First().Frequency} )
-									.ToList<Triplet>();
-			
-			trPart2 = trPart2.GroupBy(triplet => triplet.Letters, 
-			                                       triplet => triplet, 
-			                                       (key, value) => new Triplet() {Letters = key, Frequency = value.First().Frequency} )
-									.ToList<Triplet>();
-										  
-			
-			triplets = trPart1.Concat(trPart2).GroupBy(triplet => triplet.Letters, 
-			                                       triplet => triplet, 
-			                                       (key, value) => new Triplet() {Letters = key, Frequency = value.Sum(tr => tr.Frequency)} )
-										  .OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
-										  .ToList<Triplet>();
-			
-			
-			
-			var groupedOrderedTriplets = triplets.OrderByDescending(groupedTriplet => groupedTriplet.Frequency).ToList<Triplet>();
 			
 			
 			for (int i = 0; i < 10; i++)
 			{
-				Console.WriteLine(string.Format("{0} - {1}", groupedOrderedTriplets[i].Letters, groupedOrderedTriplets[i].Frequency));
+				Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
 			}
 			
 		}
-		
-		
 		
 		/// <summary>
 		/// Get count of how many times the selected triple is in triple list
@@ -162,48 +147,86 @@ namespace FindFrequentTriplets
 			
 			return triplets;
 		}
+
+        public static List<Triplet> ProcessText(List<Triplet> triplets)
+		{
+			// Create a unique triplet table to store frequency here
+            var uniqueTriplets = triplets.GroupBy(tr => tr.Letters,
+                                                  triplet => triplet, 
+                                                 (key, value) => new Triplet() { Letters = key, Frequency = value.First().Frequency })
+                                         .ToList<Triplet>();
+
+            for (int i = 0; i < uniqueTriplets.Count; i++)
+			{
+                var uniqueTriplet = uniqueTriplets[i];
+                uniqueTriplet.Frequency = GetTripletFrequency(triplets, uniqueTriplets[i].Letters);
+
+                uniqueTriplets[i] = uniqueTriplet;
+			}
+
+            return uniqueTriplets;
+		}
 		
 		/// <summary>
-		/// This struct defines Triplet entity
+		/// Split the tripl list into the several parts (part = thread)
 		/// </summary>
-		public struct Triplet
+		/// <param name="triplets">All triplet combinations</param>
+		/// <returns></returns>
+        private static List<List<Triplet>> SplitTripletsIntoParts(List<Triplet> triplets)
 		{
-			/// <summary>
-			/// Three letters
-			/// </summary>
-			public string Letters
-			{
-				get; 
-				set;
-			}
+			// parts = threads
+			const int partCount = threadsCount;
+			var partSize = triplets.Count / partCount;
+			var lastPartSize = triplets.Count - partSize * partCount + partSize;
 			
-			/// <summary>
-			/// How many times the letters present in the whole text
-			/// </summary>
-			public int Frequency
-			{
-				get; 
-				set;
-			}
+			var tripleParts = new List<List<Triplet>>();
 			
-			public Triplet(string letters) : this()
+			for (int i = 0; i < partCount; i++)
 			{
-				Letters = letters;
-			}
-		}
-		
-		
-		public static void ProcessText(List<Triplet> triplets)
-		{
-			for (int i = 0; i < triplets.Count; i++)
-			{
-				var triplet = triplets[i];
-				triplet.Frequency = GetTripletFrequency(triplets, triplets[i].Letters.ToLower());
+				tripleParts.Add(new List<Triplet>());
 				
-				// Remove old triplet and Insert new triplet with defined frequency
-				triplets.RemoveAt(i);
-				triplets.Insert(i, triplet);
+				if (i == partCount - 1)
+				{
+					for (int j = i * partSize; j < i * partSize + lastPartSize; j++)
+					{
+						tripleParts[i].Add(triplets[j]);
+					}
+                    break;
+				}
+				
+				for (int j = i * partSize; j < i * partSize + partSize; j++)
+				{
+					tripleParts[i].Add(triplets[j]);
+				}
 			}
+
+            return tripleParts;
 		}
+
+        private static List<Triplet> PerformMultiThreadingWork(List<List<Triplet>> tripleParts, int threadsCount)
+        {
+            var results = new List<List<Triplet>>();
+            var threads = new Thread[threadsCount];
+            var output = new List<Triplet>();
+
+            for (int i = 0; i < threadsCount; i++)
+            {
+                threads[i] = new Thread(new ThreadStart(delegate()
+                {
+                    results.Add(new List<Triplet>());
+                    results[i] = ProcessText(tripleParts[i]);
+                }));
+
+                threads[i].Start();
+                threads[i].Join();
+            }
+
+            foreach(var result in results)
+            {
+                output.AddRange(result);
+            }
+
+            return output;
+        }
 	}
 }
