@@ -11,7 +11,7 @@ namespace FindFrequentTriplets
 {
     class Program
     {
-        private const int partCount = 3;
+        private const int partCount = 8;
 
         public static void Main(string[] args)
         {
@@ -20,7 +20,7 @@ namespace FindFrequentTriplets
                 Console.Write("Please input the file path!");
                 return;
             }
-            
+
             if (!File.Exists(args[0]))
             {
                 Console.Write("The file doesn't exist!");
@@ -35,7 +35,7 @@ namespace FindFrequentTriplets
             stopWatch.Start();
 
             // Get 10 the most frequent triplets from the input text
-            var result = FindTripletsSync(input);
+            var result = FindTripletsAsync(input);
 
             stopWatch.Stop();
 
@@ -43,36 +43,14 @@ namespace FindFrequentTriplets
             {
                 if (i == 9)
                 {
-                    Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
+                    Console.WriteLine(string.Format("{0}", result[i].Letters));
                     break;
                 }
-                Console.Write(string.Format("{0}- {1} ", result[i].Letters, result[i].Frequency));
+
+                Console.Write(string.Format("{0}, ", result[i].Letters));
             }
 
             Console.WriteLine(stopWatch.Elapsed);
-
-
-
-            var stopWatch1 = new Stopwatch();
-            stopWatch1.Start();
-
-            // Get 10 the most frequent triplets from the input text
-            var result1 = FindTripletsAsync(input);
-
-            stopWatch1.Stop();
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (i == 9)
-                {
-                    Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
-                    break;
-                }
-                Console.Write(string.Format("{0}- {1} ", result[i].Letters, result[i].Frequency));
-            }
-
-            Console.WriteLine(stopWatch1.Elapsed);
-
             Console.ReadKey();
         }
 
