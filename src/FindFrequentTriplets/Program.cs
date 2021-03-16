@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.IO;
+using System.Text;
 
 namespace FindFrequentTriplets
 {
@@ -12,7 +14,32 @@ namespace FindFrequentTriplets
 
 		public static void Main(string[] args)
 		{
-			Console.ReadKey();
+            if (!File.Exists(args[0]))
+            {
+                Console.Write("The file doesn't exist!");
+                return;
+            }
+
+            // Read text from the file
+            var input = File.ReadAllText(args[0], Encoding.Default);
+
+            // Initialize stopwatch to measure text processing time
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            
+            // Get 10 the most frequent triplets from the input text
+            var result = FindTripletsAsync(input);
+
+            stopWatch.Stop();
+
+            Console.WriteLine(stopWatch.Elapsed);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
+            }
+
+            Console.ReadKey();
 		}
 
         public static void FindTripletsSync(string input)
@@ -38,31 +65,18 @@ namespace FindFrequentTriplets
 			
 		}
 
-        public static void FindTripletsAsync(string input)
+        public static List<Triplet> FindTripletsAsync(string input)
 		{
 			var triplets = MakeTripletCombinations(PrepareText(input));
 
-            // Initialize stopwatch to measure text processing time
-			var stopWatch = new Stopwatch();
-		    stopWatch.Start();
-
             var tripleParts = SplitTripletsIntoParts(triplets);
 
-            var result = PerformMultiThreadingWork(tripleParts, threadsCount)
+            return ProcessTripletsAsync(tripleParts, threadsCount)
                 .GroupBy(tr => tr.Letters,
                          triplet => triplet,
                         (key, value) => new Triplet() { Letters = key, Frequency = value.Sum(gr => gr.Frequency) })
                 .OrderByDescending(tr => tr.Frequency)
                 .ToList<Triplet>();
-
-			stopWatch.Stop();
-			
-			Console.WriteLine(stopWatch.Elapsed);
-			
-			for (int i = 0; i < 10; i++)
-			{
-				Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
-			}
 		}
 		
 		/// <summary>
@@ -170,7 +184,7 @@ namespace FindFrequentTriplets
         /// <param name="tripleParts">The unique triplet parts</param>
         /// <param name="threadsCount">The count of the threads</param>
         /// <returns>The result </returns>
-        private static List<Triplet> PerformMultiThreadingWork(List<List<Triplet>> tripleParts, int threadsCount)
+        private static List<Triplet> ProcessTripletsAsync(List<List<Triplet>> tripleParts, int threadsCount)
         {
             var results = new List<List<Triplet>>();
             var threads = new Thread[threadsCount];
