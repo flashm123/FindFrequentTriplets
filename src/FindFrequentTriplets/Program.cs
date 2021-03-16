@@ -12,34 +12,14 @@ namespace FindFrequentTriplets
 
 		public static void Main(string[] args)
 		{
-			OneThread();
-			ManyThreads();
 			Console.ReadKey();
 		}
-		
-		public static void OneThread()
+
+        public static void FindTripletsSync(string input)
 		{
-			string input = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
-			
-			string input1 = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном. Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
-			
-			var triplets = MakeTripletCombinations(PrepareText(input1));
-			
-			
+			var triplets = MakeTripletCombinations(PrepareText(input));
+
+            // Initialize stopwatch to measure text processing time
 			var stopWatch = new Stopwatch();
 		    stopWatch.Start();
 			
@@ -51,62 +31,38 @@ namespace FindFrequentTriplets
             var groupedOrderedTriplets = result.OrderByDescending(groupedTriplet => groupedTriplet.Frequency)
 										       .ToList<Triplet>();
 			
-			
 			for (int i = 0; i < 10; i++)
 			{
 				Console.WriteLine(string.Format("{0} - {1}", groupedOrderedTriplets[i].Letters, groupedOrderedTriplets[i].Frequency));
 			}
 			
 		}
-		
-		
-		public static void ManyThreads()
+
+        public static void FindTripletsAsync(string input)
 		{
-			string input = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
-			
-			
-			string input1 = @"Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном. Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.Трипле́т (лат. triplus — тройной) в генетике — комбинация из трёх последовательно расположенных нуклеотидов в молекуле нуклеиновой кислоты.
-			 	В информационных рибонуклеиновых кислотах (иРНК) триплеты образуют так называемые кодоны, с помощью которых в иРНК закодирована последовательность расположения аминокислот в белках[1].
-			 	В молекуле транспортной РНК (тРНК) один триплет служит антикодоном.";
-			
-			
-			var triplets = MakeTripletCombinations(PrepareText(input1));
-			
-			
+			var triplets = MakeTripletCombinations(PrepareText(input));
+
+            // Initialize stopwatch to measure text processing time
 			var stopWatch = new Stopwatch();
 		    stopWatch.Start();
 
             var tripleParts = SplitTripletsIntoParts(triplets);
 
-            var result = PerformMultiThreadingWork(tripleParts, threadsCount).GroupBy(tr => tr.Letters,
-                                                                        triplet => triplet,
-                                                                        (key, value) => new Triplet() { Letters = key, Frequency = value.Sum(gr => gr.Frequency) })
-                                                               .OrderByDescending(tr => tr.Frequency)
-                                                               .ToList<Triplet>();
+            var result = PerformMultiThreadingWork(tripleParts, threadsCount)
+                .GroupBy(tr => tr.Letters,
+                         triplet => triplet,
+                        (key, value) => new Triplet() { Letters = key, Frequency = value.Sum(gr => gr.Frequency) })
+                .OrderByDescending(tr => tr.Frequency)
+                .ToList<Triplet>();
 
-			
 			stopWatch.Stop();
 			
 			Console.WriteLine(stopWatch.Elapsed);
-			
 			
 			for (int i = 0; i < 10; i++)
 			{
 				Console.WriteLine(string.Format("{0} - {1}", result[i].Letters, result[i].Frequency));
 			}
-			
 		}
 		
 		/// <summary>
@@ -148,6 +104,11 @@ namespace FindFrequentTriplets
 			return triplets;
 		}
 
+        /// <summary>
+        /// Count how many triplet combinations appaear in the text: create unique triplets table - letters and frequency
+        /// </summary>
+        /// <param name="triplets">All triplet</param>
+        /// <returns>The triplets table - letters and frequency</returns>
         public static List<Triplet> ProcessText(List<Triplet> triplets)
 		{
 			// Create a unique triplet table to store frequency here
@@ -171,7 +132,7 @@ namespace FindFrequentTriplets
 		/// Split the tripl list into the several parts (part = thread)
 		/// </summary>
 		/// <param name="triplets">All triplet combinations</param>
-		/// <returns></returns>
+		/// <returns>List of triplet parts</returns>
         private static List<List<Triplet>> SplitTripletsIntoParts(List<Triplet> triplets)
 		{
 			// parts = threads
@@ -203,6 +164,12 @@ namespace FindFrequentTriplets
             return tripleParts;
 		}
 
+        /// <summary>
+        /// Perform text processing in multiple threads: each unique triplet part is processed by separate thread. Finally, the result parts unite.
+        /// </summary>
+        /// <param name="tripleParts">The unique triplet parts</param>
+        /// <param name="threadsCount">The count of the threads</param>
+        /// <returns>The result </returns>
         private static List<Triplet> PerformMultiThreadingWork(List<List<Triplet>> tripleParts, int threadsCount)
         {
             var results = new List<List<Triplet>>();
