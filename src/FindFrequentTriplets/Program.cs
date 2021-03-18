@@ -15,7 +15,7 @@ namespace FindFrequentTriplets
     class Program
     {
         // The count of parts to split the text to
-        private const int partCount = 8;
+        private const int partCount = 16;
 
         public static void Main(string[] args)
         {
