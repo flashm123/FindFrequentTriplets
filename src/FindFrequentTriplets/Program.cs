@@ -14,9 +14,6 @@ namespace FindFrequentTriplets
     /// </summary>
     class Program
     {
-        // The count of parts to split the text to
-        private const int partCount = 32;
-
         // The top 10 triplets to display
         private static int top = 10;
 
@@ -63,7 +60,6 @@ namespace FindFrequentTriplets
         {
             return new List<string>();
         }
-
         
 
         /// <summary>
